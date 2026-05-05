@@ -1,20 +1,10 @@
-AN_Gen v19 Page Break + Widow Orphan Fix
+AN_Gen v22 Hyperlink + Eyebrow Color
 
-Built from the stable v18 base.
-
-Fixes added:
-- Page-break before a section when it would start with fewer than about 3 body lines.
-- Widow/orphan protection checks for paragraphs that would leave only 1-2 lines at the bottom or top of a page.
-- CSS widows/orphans hints remain enabled.
-- Slight tracking/kerning tightening helps reduce isolated short lines.
-
-Important note:
-Web browsers do not provide full InDesign-level typography controls. This gets much closer, but InDesign still has stronger paragraph composer/keep options.
+Changes:
+- Hyperlinks now use standard hyperlink blue (#0563c1) instead of Sparklight purple.
+- The small eyebrow/kicker text above the H1 ("Annual Notice") is now gray so it does not compete with the logo.
 
 Upload:
 - index.html
-- app-v19.js
-- an-gen-v19.css
-- IncludedSectionContent.csv
-- Sparklight_R-purple-rgb.png
-- Sparklight_R-Business-purple-rgb.png
+- app-v22.js
+- an-gen-v22.css
