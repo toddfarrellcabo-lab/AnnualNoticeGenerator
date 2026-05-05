@@ -1,18 +1,20 @@
-AN_Gen v18 Stable Keep-Next
+AN_Gen v19 Page Break + Widow Orphan Fix
 
-This restores v16 as the stable base because v17 broke the section/column UI.
+Built from the stable v18 base.
 
-Includes:
-- Working column selector
-- Working included section list
-- Safe keep-with-next behavior: sections move to the next page if fewer than about 3 body lines would fit
-- Subtle tracking/kerning controls
-- Template wrapper fix from v16 retained
+Fixes added:
+- Page-break before a section when it would start with fewer than about 3 body lines.
+- Widow/orphan protection checks for paragraphs that would leave only 1-2 lines at the bottom or top of a page.
+- CSS widows/orphans hints remain enabled.
+- Slight tracking/kerning tightening helps reduce isolated short lines.
+
+Important note:
+Web browsers do not provide full InDesign-level typography controls. This gets much closer, but InDesign still has stronger paragraph composer/keep options.
 
 Upload:
 - index.html
-- app-v18.js
-- an-gen-v18.css
+- app-v19.js
+- an-gen-v19.css
 - IncludedSectionContent.csv
 - Sparklight_R-purple-rgb.png
 - Sparklight_R-Business-purple-rgb.png
