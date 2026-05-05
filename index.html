@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AN_Gen v12 Order + Links + Attachments</title>
+<link rel="stylesheet" href="./an-gen-v10.css" />
+</head>
+<body>
+  <main class="app">
+    <aside class="controls">
+      <h1>AN_Gen Section Bank</h1>
+      <p>Now reads <strong>section_name</strong> and <strong>section_content</strong> from IncludedSectionContent.csv.</p>
+
+      <div class="control-group">
+        <label for="csvUpload">Upload IncludedSectionContent.csv</label>
+        <input id="csvUpload" type="file" accept=".csv,text/csv">
+        <div class="status" id="csvStatus">Loading IncludedSectionContent.csv…</div>
+      </div>
+
+      <div class="control-group">
+        <label for="audience">Audience</label>
+        <select id="audience">
+          <option value="residential">Residential</option>
+          <option value="business">Business</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Title Presets</label>
+        <label class="radio-row"><input type="radio" name="titlePreset" value="Internet" checked> Internet</label>
+        <label class="radio-row"><input type="radio" name="titlePreset" value="Internet + Phone"> Internet + Phone</label>
+        <label class="radio-row"><input type="radio" name="titlePreset" value="Internet + TV + Phone"> Internet + TV + Phone</label>
+        <label class="radio-row"><input type="radio" name="titlePreset" value="TV + Phone + Internet"> TV + Phone + Internet</label>
+        <label class="radio-row"><input type="radio" name="titlePreset" value="custom"> Custom from checked services</label>
+      </div>
+
+      <div class="control-group">
+        <label>Custom Service Parts</label>
+        <div class="service-grid">
+          <label class="check-row"><input type="checkbox" name="servicePart" data-order="1" value="Internet" checked> Internet</label>
+          <label class="check-row"><input type="checkbox" name="servicePart" data-order="2" value="TV"> TV</label>
+          <label class="check-row"><input type="checkbox" name="servicePart" data-order="3" value="Phone"> Phone</label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label for="customTitle">Custom Full Title Override</label>
+        <input id="customTitle" placeholder="Example: Residential Internet Annual Notice">
+      </div>
+
+      <div class="control-group">
+        <label for="year">Document Year</label>
+        <input id="year" value="2026">
+      </div>
+
+      <div class="control-group">
+        <label>Generated H1 / Document Name</label>
+        <div class="title-preview" id="titlePreview">Residential Internet 2026</div>
+      </div>
+
+      <div class="control-group">
+        <label for="columns">Columns</label>
+        <select id="columns">
+          <option value="auto" selected>Auto</option>
+          <option value="1">1 Column</option>
+          <option value="2">2 Columns</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label class="check-row">
+          <input type="checkbox" id="activeLinks" checked>
+          Make URLs active hyperlinks in PDF/web preview
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label for="sectionSearch">Search Sections</label>
+        <input id="sectionSearch" placeholder="Search name or content…">
+      </div>
+
+      <div class="control-group">
+        <div class="button-row">
+          <button id="selectAllVisible" type="button" class="secondary">Select Visible</button>
+          <button id="clearVisible" type="button" class="secondary">Clear Visible</button>
+        </div>
+        <div class="status" id="selectedCount">0 selected</div>
+      </div>
+
+      <div class="control-group">
+        <label>Manual Ordering</label>
+        <div class="button-row">
+          <button id="saveOrder" type="button" class="secondary">Save Order</button>
+          <button id="resetOrder" type="button" class="secondary">Reset Order</button>
+        </div>
+        <div class="status">Drag sections or edit order numbers. Saved order is remembered in this browser.</div>
+      </div>
+
+      <div class="control-group">
+        <label>Included Sections</label>
+        <div class="section-list" id="sectionList"></div>
+      </div>
+
+      <div class="control-group">
+        <label for="attachmentUpload">Append PDF Attachments</label>
+        <input id="attachmentUpload" type="file" multiple accept="application/pdf">
+        <div class="status">Authority letters or other PDFs append after the generated notice.</div>
+        <div class="attachment-list" id="attachmentList"></div>
+      </div>
+
+      <div class="control-group">
+        <button onclick="window.print()">View / Download PDF</button>
+      </div>
+    </aside>
+
+    <section class="preview-wrap">
+      <div id="previewPages"></div>
+    </section>
+  </main>
+
+  <article class="page" id="pageTemplate" hidden>
+    <header class="layout-header">
+      <img class="logo" src="./Sparklight_R-purple-rgb.png" alt="Sparklight">
+      <div class="contact-block">
+        <strong data-bind="phone">1.855.740.8966</strong>
+        <span>&nbsp; | &nbsp;</span>
+        <span data-bind="website">Sparklight.com</span>
+      </div>
+    </header>
+
+    <p class="eyebrow">Annual Notice</p>
+    <h1 class="h1-doc-title" data-bind="doc-title">Residential Internet 2026</h1>
+
+    <section class="document-content layout-2col"></section>
+
+    <footer class="layout-footer p-footer">
+      <span data-bind="footer-title">Annual Notice Residential Internet 2026</span>
+      <span class="page-marker">Page</span>
+    </footer>
+  </article>
+
+<script src="./app.js"></script>
+</body>
+</html>
