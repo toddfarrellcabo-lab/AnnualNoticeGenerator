@@ -1,20 +1,18 @@
-AN_Gen v17 Keep-with-Next + Tracking
+AN_Gen v18 Stable Keep-Next
 
-New behavior:
-- If a new section would start near the bottom of a page with less than about 3 lines of body text available, the section jumps to the next page.
-- Adds subtle CSS tracking/kerning:
-  --body-tracking: -0.004em
-  --tight-tracking: -0.006em
-  --heading-tracking: -0.01em
+This restores v16 as the stable base because v17 broke the section/column UI.
 
-Notes:
-- CSS widows/orphans is not fully reliable across browsers, especially mobile Safari.
-- The JavaScript keep-with-next rule is the reliable part.
-- Kerning/tracking can reduce widows/orphans but cannot eliminate every case like InDesign can.
+Includes:
+- Working column selector
+- Working included section list
+- Safe keep-with-next behavior: sections move to the next page if fewer than about 3 body lines would fit
+- Subtle tracking/kerning controls
+- Template wrapper fix from v16 retained
 
-Upload these files:
+Upload:
 - index.html
-- app-v17.js
-- an-gen-v17.css
+- app-v18.js
+- an-gen-v18.css
 - IncludedSectionContent.csv
-- logo PNGs
+- Sparklight_R-purple-rgb.png
+- Sparklight_R-Business-purple-rgb.png
