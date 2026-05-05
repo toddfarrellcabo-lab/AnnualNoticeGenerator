@@ -1,0 +1,574 @@
+/*
+AN_Gen v10
+Fixes:
+- Reads IncludedSectionContent.csv headers: section_name, section_content.
+- Keeps embedded fallback.
+- H1 remains smaller.
+*/
+
+:root {
+  --brand-purple: #8d3b91;
+  --brand-gray: #4C5458;
+  --text: #000000;
+  --muted: #4C5458;
+  --paper: #ffffff;
+  --screen-bg: #eceaec;
+  --panel-bg: #ffffff;
+  --soft-purple: rgba(141,59,145,.08);
+
+  --font-brand: "Effra", Arial, Helvetica, sans-serif;
+
+  --page-width: 8.5in;
+  --page-height: 11in;
+  --page-top-margin: 0.32in;
+  --page-side-margin: 0.48in;
+  --page-bottom-margin: 0.38in;
+  --column-gap: 0.25in;
+
+  --logo-max-width: 125px;
+  --logo-max-height: 35px;
+
+  --body-size: 8.6pt;
+  --body-leading: 10.25pt;
+  --body-tight-size: 8.3pt;
+  --body-tight-leading: 9.6pt;
+  --small-size: 7.35pt;
+  --small-leading: 8.7pt;
+  --top-contact-size: 8.1pt;
+  --top-contact-leading: 9.2pt;
+
+  --h1-size: 14.5pt;
+  --h1-leading: 16pt;
+
+  --eyebrow-size: 8.8pt;
+  --eyebrow-leading: 10.25pt;
+  --h2-size: 9.9pt;
+  --h2-leading: 10.8pt;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  background: var(--screen-bg);
+  color: var(--text);
+  font-family: var(--font-brand);
+  text-align: left;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 410px 1fr;
+  min-height: 100vh;
+}
+
+.controls {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  background: var(--panel-bg);
+  border-right: 1px solid #ccc;
+  padding: 18px;
+}
+
+.controls h1 {
+  margin: 0 0 6px;
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+.controls p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.control-group {
+  border-top: 1px solid #ddd;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px 9px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  font-family: var(--font-brand);
+}
+
+button {
+  background: var(--brand-purple);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.secondary {
+  background: white;
+  color: var(--brand-purple);
+  border: 2px solid var(--brand-purple);
+}
+
+.service-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+
+.check-row,
+.radio-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 13px;
+  margin: 3px 0;
+}
+
+.check-row input,
+.radio-row input { width: auto; }
+
+.title-preview {
+  background: #f7f3f8;
+  border-left: 4px solid var(--brand-purple);
+  border-radius: 0 10px 10px 0;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.section-list {
+  max-height: 34vh;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 8px;
+  background: #fafafa;
+}
+
+.section-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 7px 3px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.section-item:last-child { border-bottom: 0; }
+.section-item input { width: auto; margin-top: 2px; }
+
+.section-item-title { font-weight: 700; font-size: 12px; line-height: 1.2; }
+.section-item-meta { color: var(--muted); font-size: 11px; line-height: 1.2; margin-top: 2px; }
+
+.preview-wrap { padding: 20px; }
+
+.page {
+  width: var(--page-width);
+  height: var(--page-height);
+  margin: 0 auto 20px;
+  background: var(--paper);
+  padding: var(--page-top-margin) var(--page-side-margin) var(--page-bottom-margin);
+  box-shadow: 0 8px 28px rgba(0,0,0,.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.25in;
+  margin-bottom: 0.12in;
+  flex: 0 0 auto;
+}
+
+.logo {
+  max-width: var(--logo-max-width);
+  max-height: var(--logo-max-height);
+  object-fit: contain;
+  display: block;
+}
+
+.contact-block {
+  text-align: right;
+  font-size: var(--top-contact-size);
+  line-height: var(--top-contact-leading);
+  color: var(--brand-gray);
+  padding-top: 0.02in;
+  white-space: nowrap;
+}
+
+.contact-block strong { font-weight: 700; }
+
+.eyebrow {
+  font-size: var(--eyebrow-size);
+  line-height: var(--eyebrow-leading);
+  font-weight: 700;
+  color: var(--brand-purple);
+  margin: 0 0 0.018in;
+  flex: 0 0 auto;
+}
+
+.h1-doc-title {
+  font-size: var(--h1-size);
+  line-height: var(--h1-leading);
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.045in;
+  flex: 0 0 auto;
+}
+
+.document-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  text-align: left;
+  overflow: hidden;
+}
+
+.layout-1col { column-count: 1; column-gap: 0; }
+.layout-2col { column-count: 2; column-gap: var(--column-gap); column-fill: auto; }
+
+.legal-section { break-inside: avoid; page-break-inside: avoid; margin: 0; }
+
+.h2-section {
+  break-after: avoid;
+  page-break-after: avoid;
+  font-size: var(--h2-size);
+  line-height: var(--h2-leading);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--brand-purple);
+  margin: 0.06in 0 0.035in;
+  orphans: 3;
+  widows: 3;
+  text-align: left;
+}
+
+.legal-section:first-child .h2-section:first-child { margin-top: 0; }
+
+.p-body, .p-leadin, .p-callout {
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
+  font-weight: 400;
+  margin: 0 0 0.045in;
+  orphans: 3;
+  widows: 3;
+  text-align: left;
+}
+
+.p-body-tight {
+  font-size: var(--body-tight-size);
+  line-height: var(--body-tight-leading);
+  font-weight: 400;
+  margin: 0 0 0.035in;
+  orphans: 3;
+  widows: 3;
+  text-align: left;
+}
+
+.p-small, .p-footer {
+  font-size: var(--small-size);
+  line-height: var(--small-leading);
+  color: var(--muted);
+  margin: 0;
+  text-align: left;
+}
+
+.char-leadin { font-weight: 700; }
+
+.char-url, a {
+  color: var(--brand-purple);
+  font-weight: 500;
+  text-decoration: underline;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.char-phone { font-weight: 700; white-space: nowrap; }
+.char-legal-warning { font-weight: 700; text-transform: uppercase; }
+
+.layout-footer {
+  flex: 0 0 auto;
+  margin-top: 0.08in;
+  border-top: 0.5pt solid var(--brand-gray);
+  padding-top: 0.055in;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2in;
+  width: 100%;
+}
+
+.layout-footer span:last-child { text-align: right; }
+.status { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+@media print {
+  body { background: white; }
+  .controls { display: none; }
+  .app { display: block; }
+  .preview-wrap { padding: 0; }
+
+  .page {
+    width: 8.5in;
+    height: 11in;
+    margin: 0;
+    box-shadow: none;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page:last-child { page-break-after: auto; break-after: auto; }
+
+  @page { size: letter; margin: 0; }
+}
+
+
+/* === v12 ordering + attachments === */
+.section-actions {
+  display: grid;
+  grid-template-columns: 28px 1fr 72px;
+  gap: 6px;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+  color: var(--brand-purple);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.order-input {
+  width: 64px;
+  padding: 4px 5px;
+  font-size: 11px;
+}
+
+.section-item.dragging {
+  opacity: .45;
+  background: #f6eef7;
+}
+
+.section-item.drag-over {
+  border-top: 2px solid var(--brand-purple);
+}
+
+.attachment-list {
+  max-height: 18vh;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 8px;
+  background: #fafafa;
+}
+
+.attachment-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 3px;
+  border-bottom: 1px solid #e8e8e8;
+  font-size: 12px;
+}
+
+.attachment-item:last-child {
+  border-bottom: 0;
+}
+
+.attachment-item button {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.attachment-page .document-content {
+  overflow: hidden;
+}
+
+.pdf-attachment-frame,
+.pdf-attachment-object {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.attachment-note {
+  font-size: 8pt;
+  line-height: 10pt;
+  color: var(--muted);
+  margin: 0 0 0.05in;
+}
+
+
+/* === v14 print blank-page fix ===
+   The prior print rules forced each .page to 11in tall. If Chrome/Edge print
+   headers/footers or nonzero printer margins are enabled, the page becomes
+   taller than the printable area and the footer spills onto a blank sheet.
+*/
+@media print {
+  html,
+  body {
+    width: 8.5in;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .controls {
+    display: none !important;
+  }
+
+  .app {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .preview-wrap {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #previewPages {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .page {
+    width: 8.5in !important;
+    height: 10.72in !important;
+    min-height: 10.72in !important;
+    max-height: 10.72in !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .layout-footer {
+    margin-top: auto !important;
+  }
+
+  @page {
+    size: Letter;
+    margin: 0;
+  }
+}
+
+/* Optional screen warning/help text style used by v14 README only if added later */
+.print-settings-note {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+
+/* === v15 hidden template fix ===
+   Safari/iPhone can print the hidden page template because .page sets display:flex.
+   Force all hidden/template elements to stay hidden in screen and print.
+*/
+[hidden],
+#pageTemplate {
+  display: none !important;
+}
+
+@media print {
+  [hidden],
+  #pageTemplate {
+    display: none !important;
+  }
+}
+
+
+/* === v16 controls restore + safe template hiding ===
+   Do not hide #pageTemplate directly with display:none because JS clones it.
+   Hide only its wrapper (#templateStore), then cloned pages outside the wrapper display normally.
+*/
+#templateStore {
+  display: none !important;
+}
+
+#previewPages .page,
+.generated-page {
+  display: flex !important;
+}
+
+@media print {
+  #templateStore {
+    display: none !important;
+  }
+
+  #previewPages .page,
+  .generated-page {
+    display: flex !important;
+  }
+}
+
+
+/* === v17 keep-with-next + tracking ===
+   Adds subtle print-style tracking controls to reduce widows/orphans.
+   This is the web equivalent of tightening/loosening tracking in InDesign.
+*/
+:root {
+  --body-tracking: -0.004em;
+  --tight-tracking: -0.006em;
+  --heading-tracking: -0.01em;
+}
+
+.h1-doc-title,
+.h2-section {
+  letter-spacing: var(--heading-tracking);
+}
+
+.p-body,
+.p-leadin,
+.p-callout {
+  letter-spacing: var(--body-tracking);
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+.p-body-tight {
+  letter-spacing: var(--tight-tracking);
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+/* Keep at least a few lines with a heading when the browser honors it. 
+   JS pagination below does the actual reliable jump. */
+.legal-section {
+  orphans: 3;
+  widows: 3;
+}
+
+.legal-section.short-tail-warning {
+  outline: 1px dashed rgba(141, 59, 145, .35);
+}

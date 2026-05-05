@@ -1,24 +1,20 @@
-AN_Gen v16 Controls Restore
+AN_Gen v17 Keep-with-Next + Tracking
 
-What happened:
-- v15 hid #pageTemplate directly to stop iPhone/Safari from printing it.
-- That fixed the blank template page, but it also created a conflict because JavaScript clones #pageTemplate to create generated pages.
-- Depending on browser/cache timing, the clone could inherit the hard hidden display behavior, causing sections/columns to look broken.
+New behavior:
+- If a new section would start near the bottom of a page with less than about 3 lines of body text available, the section jumps to the next page.
+- Adds subtle CSS tracking/kerning:
+  --body-tracking: -0.004em
+  --tight-tracking: -0.006em
+  --heading-tracking: -0.01em
 
-Fix:
-- The template is now wrapped in #templateStore.
-- CSS hides #templateStore, not #pageTemplate directly.
-- Cloned pages are placed outside #templateStore and forced to display normally.
-- Columns and included sections controls remain active.
+Notes:
+- CSS widows/orphans is not fully reliable across browsers, especially mobile Safari.
+- The JavaScript keep-with-next rule is the reliable part.
+- Kerning/tracking can reduce widows/orphans but cannot eliminate every case like InDesign can.
 
-Upload these files to GitHub:
+Upload these files:
 - index.html
-- app-v16.js
-- an-gen-v16.css
+- app-v17.js
+- an-gen-v17.css
 - IncludedSectionContent.csv
-- Sparklight_R-purple-rgb.png
-- Sparklight_R-Business-purple-rgb.png
-
-After upload:
-- Hard refresh the page.
-- On iPhone/Safari, close the tab and reopen if it still shows cached v15 files.
+- logo PNGs
