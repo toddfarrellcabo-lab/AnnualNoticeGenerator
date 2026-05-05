@@ -1,22 +1,23 @@
-AN_Gen v12 Order + Links + Attachments
+AN_Gen v13 GitHub Pages Fix
 
-New in v12:
-- Manual ordering UI:
-  - Edit order numbers per section.
-  - Drag-and-drop sections in the included section list.
-  - Save Order stores the current manual order in the browser using localStorage.
-  - Reset Order returns to CSV order.
+Why v12 looked broken on GitHub Pages:
+- It waited on the external CSV before populating the bank.
+- In some GitHub/local-load situations that left the UI blank or stuck at "Loading..."
+- Also app.js and CSS filenames were reused, so browser/GitHub cache could keep serving older code.
 
-- Active hyperlink toggle:
-  - When enabled, URLs become clickable <a> links in the web/PDF output.
-  - When disabled, URLs remain styled text only.
+Fixes:
+- The section bank loads immediately from an embedded copy of IncludedSectionContent.csv.
+- It then tries to refresh from the external IncludedSectionContent.csv if available.
+- CSS and JS are cache-busted:
+  - an-gen-v13.css?v=13
+  - app-v13.js?v=13
 
-- PDF attachments:
-  - Upload one or more PDF attachments.
-  - Attachments are appended to the end of the generated notice.
-  - Works for authority letters or required supplemental documents.
+Upload these files to GitHub:
+- index.html
+- app-v13.js
+- an-gen-v13.css
+- IncludedSectionContent.csv
+- Sparklight_R-purple-rgb.png
+- Sparklight_R-Business-purple-rgb.png
 
-Notes:
-- Browser printing embedded PDFs can vary by browser. For production, test in Chrome/Edge using:
-  Save as PDF, Letter, Margins: None, Scale: 100%, Headers/footers: Off, Background graphics: On.
-- The generated notice pages paginate normally; attachment PDFs are appended as full-page embedded objects.
+You can delete or ignore old app.js / an-gen-v10.css after confirming v13 works.
