@@ -1,30 +1,19 @@
-AN_Gen v14 Print Blank Fix
+AN_Gen v15 Hidden Template Fix
 
-Why you were getting blank pages:
-1. The generated page was set to exactly 11in tall.
-2. Chrome/Edge print headers/footers or default print margins add extra printable-space requirements.
-3. That made the bottom footer spill onto a new sheet, creating mostly blank pages between content pages.
-4. The uploaded PDF showed browser headers/footers were on: URL/date/Page text appeared on every page.
+Why the extra blank page appeared:
+- The blank page is the hidden HTML page template used by JavaScript to clone new pages.
+- Because the CSS gives .page display:flex, iPhone/Safari can override the hidden attribute and print the template.
+- The blank page usually shows the default title, often "Residential Internet 2026", with no body content.
 
-Fixes in v14:
-- Print page height reduced from 11in to 10.72in so the internal footer no longer spills to a blank browser page.
-- Print margins are forced to zero where CSS can control it.
-- CSS/JS filenames are cache-busted:
-  - an-gen-v14.css?v=14
-  - app-v14.js?v=14
-
-Still recommended in Chrome/Edge Print:
-- Destination: Save as PDF
-- Paper: Letter
-- Margins: None
-- Headers and footers: OFF
-- Background graphics: ON
-- Scale: 100%
+Fix:
+- Adds a hard CSS rule:
+  [hidden], #pageTemplate { display:none !important; }
+- Applies the same rule inside @media print.
 
 Upload these files to GitHub:
 - index.html
-- app-v14.js
-- an-gen-v14.css
+- app-v15.js
+- an-gen-v15.css
 - IncludedSectionContent.csv
 - Sparklight_R-purple-rgb.png
 - Sparklight_R-Business-purple-rgb.png
